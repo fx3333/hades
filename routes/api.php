@@ -17,6 +17,18 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
+Route::prefix('v1')
+    ->namespace('Api')
+    ->name('api.v1.')
+    ->group(function() {
+
+        //测试用
+        Route::get('version', function() {
+            return 'this is version v1';
+        })->name('version');
+		
+	});
+
 
 Route::prefix('user/')->group(function() {
     //用户注册
