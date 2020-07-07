@@ -30,10 +30,7 @@ class UserController extends Controller
      * @return mixed
      */
     public function loginOut(){
-        // Auth::guard('api')->logout();
-        // auth('api')->logout();
         // return $this->success('退出成功...');
-
         // auth('api')->logout();
         auth('api')->logout();
         return response(null, 204);

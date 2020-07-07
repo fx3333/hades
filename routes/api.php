@@ -39,7 +39,7 @@ Route::prefix('v1')
                 Route::get('info', 'UserController@info')->name('user.info');
                 Route::post('changepw', 'UserController@changePw')->name('user.changepw');
                 //用户退出
-                Route::delete('authorizations/current', 'UserController@logout')->name('users.logout');
+                Route::delete('authorizations/current', 'UserController@loginOut')->name('users.logout');
             });
         });
 		
