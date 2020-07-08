@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Relations\Relation;
+use App\Models\Obituary;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,5 +28,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         Schema::defaultStringLength(191);
+        Relation::morphMap([
+            'obituary' => Obituary::class,
+        ]);
     }
 }

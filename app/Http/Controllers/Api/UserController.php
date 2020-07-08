@@ -3,25 +3,51 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Models\AdminLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
+
+    protected $guard = 'api';
+
     /**
      * @param Request $request
      * @return mixed
      */
     public function login(Request $request){
-        $token = Auth::guard('api')->attempt(['name'=>$request->name,'password'=>$request->password]);
+
+        $name=isset($request->name)?$request->name:"";
+        $password=isset($request->password)?$request->password:"";
+        $token = Auth::guard('api')->attempt(['name'=>$name,'password'=>$password]);
         if($token) {
             // return $this->setStatusCode(201)->success(['token' => 'bearer ' . $token]);
+            $user = \Auth::guard($this->guard)->user();
+            // echo $user->id;die;
+            //操作日志添加
+            AdminLog::addLog([
+                "user_id"=>$user->id,
+                "status"=>'1',
+                "type"=>'login',
+                "remark"=>"".$user->name."登录成功",
+                "extra"=>"",
+            ]);
             
             return $this->setStatusCode(201)->success([
                 'token' => $token,
                 'expires_in' => \Auth::guard('api')->factory()->getTTL() * 60,
                 ]);
         }
+
+        //操作日志添加
+        AdminLog::addLog([
+            "user_id"=>"0",
+            "status"=>'0',
+            "type"=>'login',
+            "remark"=>"账号:".$name.",密码:".$password."登录失败",
+            "extra"=>"",
+        ]);
         return $this->failed('账号或密码错误',400);
     }
 
