@@ -27,17 +27,22 @@ Route::prefix('v1')
             return 'this is version v1';
         })->name('version');
 
+        Route::post('media/imgStore', 'MediaController@imgStore')->name('media.imgStore');
+        Route::get('media/calc', 'MediaController@calc')->name('media.calc');
+
         Route::prefix('user/')->group(function() {
             //用户注册
             Route::post('register', 'UserController@register')->name('user.register');
             //用户登录
             Route::post('login', 'UserController@login')->name('user.login');
             Route::post('authorizations/current', 'UserController@updateToken')->name('user.login');
+            
         
             Route::middleware('api.refresh')->group(function() {
                 //当前用户信息
                 Route::get('info', 'UserController@info')->name('user.info');
                 Route::post('changepw', 'UserController@changePw')->name('user.changepw');
+                Route::post('update/{user}', 'UserController@update')->name('user.update');
                 //用户退出
                 Route::delete('authorizations/current', 'UserController@loginOut')->name('users.logout');
             });

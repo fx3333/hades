@@ -52,6 +52,23 @@ class UserController extends Controller
     }
 
     /**
+     * 修改个人信息
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function update(Request $request,User $user){
+
+        $user->fill($request->all());
+        $user->save();
+
+        return $this->success($user);
+
+
+
+    }
+
+    /**
      * 删除token
      * @return mixed
      */
@@ -115,9 +132,26 @@ class UserController extends Controller
     public function changePw(Request $request)
     {
         $user = $request->user();
-        $user->update(['password' => bcrypt($request->password)]);
+        $password=isset($request->password)?$request->password:"";
+        $user->update(['password' => bcrypt($password)]);
         $token = Auth::guard('api')->refresh();
+
+
+        //操作日志添加
+        AdminLog::addLog([
+            "user_id"=>"".$user->id,
+            "status"=>'1',
+            "type"=>'changePw',
+            "remark"=>"新密码修改为:".$password."",
+            "extra"=>"",
+        ]);
         return $this->setStatusCode(201)->setToken($token)->success('修改密码成功');
+    }
+
+
+    /**管理人员列表 */
+    public function list(Request $request){
+
     }
 
 }
